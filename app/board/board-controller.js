@@ -270,13 +270,6 @@ angular.module('drupalKanbanApp.board.controller', [
       }
     };
 
-    /**
-     * Fires off all the data gathering and population functions.
-     */
-    var populateBoard = function(data) {
-
-    };
-
     // Get the project information and load the board.
     $http({
       method: 'GET',
