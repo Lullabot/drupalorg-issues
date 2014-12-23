@@ -1,4 +1,5 @@
 h3.panel-title {
+    padding-bottom: 0.25em;
     overflow: hidden;
     text-overflow: ellipsis;
 }
