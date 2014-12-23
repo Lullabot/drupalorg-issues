@@ -1,0 +1,79 @@
+<div class="container">
+  <form class="form-inline" role="form">
+    <div class="form-group">
+      <label class="sr-only" for="project">Project</label>
+      <angucomplete-alt id="project"
+                        placeholder="Search projects"
+                        pause="400"
+                        remote-url="https://www.drupal.org/entityreference/autocomplete/single/field_project/node/project_issue/NULL/"
+                        remote-url-response-formatter="angucompleteResponseFormatter"
+                        remote-url-data-field="items"
+                        title-field="project"
+                        selected-object="projectSelected"
+                        input-class="form-control"
+                        initial-value="{{projectSelected}}"/>
+    </div>
+    <div class="form-group">
+      <label class="sr-only" for="tags">Tags</label>
+      <input type="textfield" class="form-control" id="tags" placeholder="Tag" data-ng-model="tagSelected"/>
+    </div>
+    <div class="form-group">
+      <label class="sr-only" for="version">Version</label>
+      <input type="textfield" class="form-control" id="version" placeholder="Version" data-ng-model="version"/>
+    </div>
+    <button type="submit" class="btn btn-default" data-ng-click="updateFilters()">Update</button>
+  </form>
+  <div class="row">
+    <div class="col-md-3" data-ng-repeat="column in columns">
+      <h4>
+        <a href="" data-toggle="collapse" data-target="#{{column.id}}" data-ng-click="column.collapsed = !column.collapsed">
+          {{column.name}} <span class="glyphicon" data-ng-class="column.collapsed ? 'glyphicon-collapse-up' : 'glyphicon-collapse-down'"></span>
+        </a>
+      </h4>
+
+      <div>
+        <div id="{{column.id}}" class="collapse in">
+          <div class="panel panel-default" data-ng-class="priorityMap[issue.field_issue_priority].class"
+               data-ng-repeat="issue in column.issues track by $index">
+            <div class="panel-heading">
+              <h3 class="panel-title"><a data-ng-href="{{issue.url}}" target="_new">{{issue.title}}</a>
+              </h3>
+            </div>
+            <div class="panel-body">
+              <table class="table table-condensed small">
+                <tr>
+                  <td>Status</td>
+                  <td><span class="pull-right">{{statusMap[issue.field_issue_status].name}}</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Comments</td>
+                  <td><span class="badge pull-right">{{issue.comment_count}}</span></td>
+                </tr>
+                <tr>
+                  <td>New Comments</td>
+                  <td><span class="badge pull-right">{{issue.comment_count_new}}</span></td>
+                </tr>
+                <tr>
+                  <td>Last Comment</td>
+                  <td><span class="badge pull-right" time-ago="{{issue.last_comment_timestamp}}"></span></td>
+                </tr>
+                <tr>
+                  <td>Assigned</td>
+                  <td><span class="glyphicon pull-right" data-ng-class="issue.drupalKanban.assigned"></span></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <ul class="list-group">
+          <li class="list-group-item active">Number of issues not loaded</li>
+          <li class="list-group-item" data-ng-repeat="status in column.status">
+            <span data-ng-bind="statusMap[status].name"></span>
+            <span class="badge" data-ng-bind="statusMap[status].total_issues"></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
