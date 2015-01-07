@@ -127,6 +127,9 @@ angular.module('drupalKanbanApp.board.controller', [
       if ($scope.version) {
         window.location.hash += '&version=' + $scope.version;
       }
+      if ($scope.assigned) {
+        window.location.hash += '&assigned=' + $scope.assigned;
+      }
 
       if ($scope.tagSelected) {
         $http({
@@ -168,6 +171,7 @@ angular.module('drupalKanbanApp.board.controller', [
     $scope.project = 3060;
     $scope.tags = null;
     $scope.version = null;
+    $scope.assigned = null;
 
     // Get filters from the URL.
     var lProject = urlParams(location.href, 'project');
@@ -181,6 +185,10 @@ angular.module('drupalKanbanApp.board.controller', [
     var lVersion = urlParams(location.href, 'version');
     if (lVersion) {
       $scope.version = lVersion;
+    }
+    var lAssigned = urlParams(location.href, 'assigned');
+    if (lAssigned) {
+      $scope.assigned = lAssigned;
     }
 
     /**
@@ -225,6 +233,9 @@ angular.module('drupalKanbanApp.board.controller', [
       }
       if ($scope.version) {
         url += '&field_issue_version=' + $scope.version;
+      }
+      if ($scope.assigned) {
+        url += '&field_issue_assigned=' + $scope.assigned;
       }
 
       if (page < maxPages) {
@@ -302,4 +313,19 @@ angular.module('drupalKanbanApp.board.controller', [
           }
         }
       });
+
+    /**
+     * If filtered by a UID, find the user's name.
+     */
+    if ($scope.assigned) {
+      $http({
+        method: 'GET',
+        url: 'https://www.drupal.org/api-d7/user/' + $scope.assigned + '.json'
+      })
+        .success(function (data, status, headers, config) {
+          if (typeof data.name !== 'undefined') {
+            $scope.pageTitle = 'Issues assigned to ' + data.name;
+          }
+        });
+    }
   }]);
